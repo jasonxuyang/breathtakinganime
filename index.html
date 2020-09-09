@@ -59,19 +59,14 @@
                 overscroll-behavior: none;
             }
 
-            #nav {
+            #nav_left {
                 position: absolute;
-                display: flex;
-                flex-flow: row nowrap;
-                justify-content: space-between;
-                align-items: center;
                 top: 0;
                 left: 0;
-                width: 100vw;
                 z-index: 5;
             }
 
-            #nav h1 {
+            #nav_left h1 {
                 font-family: 'GoogleSans-Bold';
                 font-size: 1.389vw;
                 color: #FFFFFF;
@@ -80,7 +75,14 @@
                 margin-left: 1.736vw;
             }
 
-            #nav .nav_links {
+            #nav_right {
+                position: absolute;
+                top: 0;
+                right: 0;
+                z-index: 5;
+            }
+
+            #nav_right .nav_links {
                 display: flex;
                 flex-flow: row nowrap;
                 width: 10.069vw;
@@ -89,7 +91,7 @@
                 margin-right: 1.736vw;
             }
 
-            #nav .nav_link {
+            #nav_right .nav_link {
                 font-family: 'GoogleSans-Medium';
                 font-size: 1.389vw;
                 color: #FFFFFF;
@@ -171,6 +173,12 @@
                 width: 47.5vw;
                 height: 26.806vw;
                 z-index: 2;
+                opacity: 0; 
+                transition: opacity 1s ease-in-out;
+            }
+
+            .gallery_img.visible {
+                opacity: 1;
             }
 
             .img_overlay {
@@ -183,6 +191,7 @@
                 opacity: 0;
                 transition: .3s ease-out;
                 z-index: 3;
+                pointer-events: none;
             }
 
             .img_wrapper:hover .img_overlay{
@@ -211,8 +220,10 @@
         </style>
     </head>
     <body>
-        <nav id='nav'>
+        <nav id='nav_left'>
             <h1>BreathTakingAnime</h1>
+        </nav>
+        <nav id='nav_right'>
             <div class='nav_links'>
                 <a href="" class='nav_link'>Shows</a>
                 <a href="" class='nav_link'>About</a>

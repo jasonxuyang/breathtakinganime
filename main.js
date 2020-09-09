@@ -4,7 +4,7 @@ const body = document.body;
 const cursorInner = document.getElementById('cursor_inner');
 const cursorOuter = document.getElementById('cursor_outer');
 const container = document.getElementById('gallery');
-const imgs = document.getElementsByClassName('img_wrapper')
+const imgs = document.getElementsByClassName('gallery_img')
 
 // Init variables to keep track of mouse position
 let posInnerX = 0;
@@ -23,14 +23,58 @@ let dx = sx;
 let dy = sy;
 
 // Init limit variables
-let imgBounding;
 
-function moveToCenter(x, y) {
-    let centerDiffX = windowCenterX - x;
-    let centerDiffY = windowCenterY - y;
-    console.log("Img is " + centerDiffX + ", " + centerDiffY + "px away from the center.")
+function moveToCenter(e) {
+    let imgBounding = e.target.getBoundingClientRect();
+    let centerPosX = imgBounding.left + (imgBounding.width / 2);
+    let centerPosY = imgBounding.top + (imgBounding.height / 2);
+    let windowCenterX = window.innerWidth / 2;
+    let windowCenterY = window.innerHeight / 2;
+    let centerDiffX = windowCenterX - centerPosX;
+    let centerDiffY = windowCenterY - centerPosY;
     sx += centerDiffX;
     sy += centerDiffY;
+}
+
+// Lazy Loading Settings
+const options = {
+    root: document.window,
+    rootMargin: '0px',
+    threshold: 0
+}
+
+//Lazy Loading
+function callback (entries, observer) {
+    // console.log(observer);
+    
+    entries.forEach(entry => {
+        let imgIntersecting = entry.isIntersecting;
+        if (imgIntersecting == true) {
+            entry.target.classList.add('visible');
+        } else {
+            entry.target.classList.remove('visible');
+        }
+    });
+}
+
+let observer = new IntersectionObserver(callback, options);
+
+var loadCounter = 0;
+
+function loadProgressIncrementer(e){
+    loadCounter ++;
+    console.log(loadCounter + ' images have loaded.');
+    if (loadCounter === imgs.length) {
+        console.log('All images have been loaded.')
+    }
+}
+
+for (let i = 0; i < imgs.length; i++) {
+    imgs.item(i).addEventListener('mouseenter', mouseEnter);
+    imgs.item(i).addEventListener('mouseleave', mouseLeave);
+    imgs.item(i).addEventListener('load', loadProgressIncrementer);
+    imgs.item(i).addEventListener('click', moveToCenter);
+    observer.observe(imgs.item(i));
 }
 
 // Establishing Event Listeners
@@ -38,13 +82,6 @@ window.addEventListener('mousemove', findPointerPosition);
 window.addEventListener('mousemove', findDifference);
 window.addEventListener('mousedown', onPointerDown)
 window.addEventListener('mouseup', onPointerUp)
-
-// console.log(imgs);
-for (let i = 0; i < imgs.length; i++) {
-    imgs.item(i).addEventListener('mouseenter', mouseEnter);
-    imgs.item(i).addEventListener('mouseleave', mouseLeave);
-}
-// imgs.addEventListener('mouseenter', mouseEnter)
 
 function mouseEnter() {
     cursorOuter.classList.add("cursor_outer_hover");
@@ -114,7 +151,7 @@ function updatePosition() {
 
 // Establishing scroll limits
 function pastLimits() {
-    imgBounding = container.getBoundingClientRect();
+    let imgBounding = container.getBoundingClientRect();
     // If  scroll past left limit
     if (imgBounding.left >= 0) {
         diffX =  -imgBounding.left / 16;
@@ -139,7 +176,7 @@ function pastLimits() {
 
 // Translating to Start Position (Middle of Gallery)
 function startPosition() {
-    imgBounding = container.getBoundingClientRect();
+    let imgBounding = container.getBoundingClientRect();
     diffX = -(imgBounding.width - window.innerWidth) / 2;
     diffY = -(imgBounding.height - window.innerHeight) / 2;
     sx += diffX;

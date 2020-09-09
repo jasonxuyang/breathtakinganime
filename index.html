@@ -1,0 +1,345 @@
+<html>
+    <head>
+        <style>
+            @font-face {
+                font-family: 'GoogleSans-Bold';
+                font-style: normal;
+                font-weight: normal;
+                src: local('GoogleSans-Bold'), local('GoogleSans-Bold'),
+                    url('static/font/GoogleSans-Bold.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+                    url('static/font/GoogleSans-Bold.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+            }
+
+            @font-face {
+                font-family: 'GoogleSans-Medium';
+                font-style: normal;
+                font-weight: normal;
+                src: local('GoogleSans-Medium'), local('GoogleSans-Medium'),
+                    url('static/font/GoogleSans-Medium.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+                    url('static/font/GoogleSans-Medium.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+            }
+
+            @font-face {
+                font-family: 'GoogleSans-Regular';
+                font-style: normal;
+                font-weight: normal;
+                src: local('GoogleSans-Regular'), local('GoogleSans-Regular'),
+                    url('static/font/GoogleSans-Regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+                    url('static/font/GoogleSans-Regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+            }
+
+            a,body,button,div,footer,form,h1,h2,h3,header,html,img,input,label,li,nav,p,select,span,table,textarea,ul {
+                margin: 0;
+                padding: 0;
+                border: 0;
+                font: inherit;
+                font-family: inherit;
+                font-size: 100%
+            }
+
+            html {
+                background: #000000;;
+                -webkit-text-size-adjust: none;
+                -webkit-font-smoothing: subpixel-antialiased;
+                -webkit-font-smoothing: antialiased;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+                cursor: none;
+            }
+            
+            html::-webkit-scrollbar {
+                width: 0px;
+                background: transparent; 
+            }
+
+
+            body {
+                position: relative;
+                margin: 0;
+                overscroll-behavior: none;
+            }
+
+            #nav {
+                position: absolute;
+                display: flex;
+                flex-flow: row nowrap;
+                justify-content: space-between;
+                align-items: center;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                z-index: 5;
+            }
+
+            #nav h1 {
+                font-family: 'GoogleSans-Bold';
+                font-size: 1.389vw;
+                color: #FFFFFF;
+                text-shadow: 0px 0px 50px rgba(0, 0, 0, 0.5);
+                margin-top: 1.736vw;
+                margin-left: 1.736vw;
+            }
+
+            #nav .nav_links {
+                display: flex;
+                flex-flow: row nowrap;
+                width: 10.069vw;
+                justify-content: space-between;
+                margin-top: 1.736vw;
+                margin-right: 1.736vw;
+            }
+
+            #nav .nav_link {
+                font-family: 'GoogleSans-Medium';
+                font-size: 1.389vw;
+                color: #FFFFFF;
+                text-shadow: 0px 0px 50px rgba(0, 0, 0, 0.5);
+                text-decoration: none;
+            }
+
+            main {
+                position: fixed;
+                display: flex;
+                flex-direction: column;
+                top: 0;
+                left: 0;
+                z-index: 0;
+            }
+
+            #cursor_outer {
+                position: fixed;
+                top: 0;
+                left: 0;
+                border-radius: 50%;
+                border: rgba(255, 255, 255, .75) solid 1px;
+                z-index: 5;
+                pointer-events: none;
+            }
+
+            .cursor_outer_initial {
+                width: 24px;
+                height: 24px;
+                transition: height .3s, width .3s;
+            }
+
+            .cursor_outer_hover {
+                width: 96px;
+                height: 96px;
+                transition: height .3s, width .3s;
+            }
+
+            #cursor_inner {
+                width: 12px;
+                height: 12px;
+                position: fixed;
+                top: 0;
+                left: 0;
+                border-radius: 50%;
+                background: #FFFFFF;
+                z-index: 6;
+                pointer-events: none;
+            }
+
+            #gallery {
+                padding: 19.722vw;
+            }
+
+            img { 
+                -webkit-user-drag: none; 
+                -khtml-user-drag: none; 
+                -moz-user-drag: none; 
+                -o-user-drag: none; 
+            }
+
+            .img_container {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: nowrap;
+            }
+
+            .img_wrapper {
+                position: relative;
+                margin: 4.93vw;
+                width: 47.5vw;
+                height: 26.806vw;
+            }
+
+            .gallery_img {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 47.5vw;
+                height: 26.806vw;
+                z-index: 2;
+            }
+
+            .img_overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 47.5vw;
+                height: 26.806vw;
+                background: linear-gradient(360deg, #000000 0%, rgba(0, 0, 0, 0) 100%);
+                opacity: 0;
+                transition: .3s ease-out;
+                z-index: 3;
+            }
+
+            .img_wrapper:hover .img_overlay{
+                opacity: 1;
+            }
+            
+            .img_content {
+                position: absolute;
+                bottom: 1.667vw;
+                left: 1.667vw;
+            }
+
+            h2 {
+                font-family: 'GoogleSans-Medium';
+                font-size: 2.222vw;
+                color: #FFFFFF;
+            }
+
+            h3 {
+                font-family: 'GoogleSans-Medium';
+                font-size: 1.389vw;
+                color: #D9D9D9;
+                margin-bottom: 0.417vw;
+            }
+
+        </style>
+    </head>
+    <body>
+        <nav id='nav'>
+            <h1>BreathTakingAnime</h1>
+            <div class='nav_links'>
+                <a href="" class='nav_link'>Shows</a>
+                <a href="" class='nav_link'>About</a>
+            </div>
+        </nav>
+        <div id='cursor_inner'></div>
+        <div id='cursor_outer' class='cursor_outer_initial'></div>
+        <main id='main'>
+            <div id='gallery'>
+                <div class='img_container'>
+                    <div class='img_wrapper'>
+                        <div class='img_overlay'>
+                            <div class='img_content'>
+                                <h3>Kyoto Animation</h3>
+                                <h2>Violet Evergarden</h2>
+                            </div>
+                        </div>
+                        <img src='static/violet1.png' class='gallery_img'>
+                    </div>
+                    <div class='img_wrapper'>
+                        <div class='img_overlay'></div>
+                        <img src='static/violet1.png' class='gallery_img'>
+                    </div>
+                    <div class='img_wrapper'>
+                        <div class='img_overlay'></div>
+                        <img src='static/violet1.png' class='gallery_img'>
+                    </div>
+                    <div class='img_wrapper'>
+                        <div class='img_overlay'></div>
+                        <img src='static/violet1.png' class='gallery_img'>
+                    </div>
+                    <div class='img_wrapper'>
+                        <div class='img_overlay'></div>
+                        <img src='static/violet1.png' class='gallery_img'>
+                    </div>
+                </div>
+                <div class='img_container'>
+                    <div class='img_wrapper'>
+                        <div class='img_overlay'></div>
+                        <img src='static/violet1.png' class='gallery_img'>
+                    </div>
+                    <div class='img_wrapper'>
+                        <div class='img_overlay'></div>
+                        <img src='static/violet1.png' class='gallery_img'>
+                    </div>
+                    <div class='img_wrapper'>
+                        <div class='img_overlay'></div>
+                        <img src='static/violet1.png' class='gallery_img'>
+                    </div>
+                    <div class='img_wrapper'>
+                        <div class='img_overlay'></div>
+                        <img src='static/violet1.png' class='gallery_img'>
+                    </div>
+                    <div class='img_wrapper'>
+                        <div class='img_overlay'></div>
+                        <img src='static/violet1.png' class='gallery_img'>
+                    </div>
+                </div>
+                <div class='img_container'>
+                    <div class='img_wrapper'>
+                        <div class='img_overlay'></div>
+                        <img src='static/violet1.png' class='gallery_img'>
+                    </div>
+                    <div class='img_wrapper'>
+                        <div class='img_overlay'></div>
+                        <img src='static/violet1.png' class='gallery_img'>
+                    </div>
+                    <div class='img_wrapper'>
+                        <div class='img_overlay'></div>
+                        <img src='static/violet1.png' class='gallery_img'>
+                    </div>
+                    <div class='img_wrapper'>
+                        <div class='img_overlay'></div>
+                        <img src='static/violet1.png' class='gallery_img'>
+                    </div>
+                    <div class='img_wrapper'>
+                        <div class='img_overlay'></div>
+                        <img src='static/violet1.png' class='gallery_img'>
+                    </div>
+                </div>
+                <div class='img_container'>
+                    <div class='img_wrapper'>
+                        <div class='img_overlay'></div>
+                        <img src='static/violet1.png' class='gallery_img'>
+                    </div>
+                    <div class='img_wrapper'>
+                        <div class='img_overlay'></div>
+                        <img src='static/violet1.png' class='gallery_img'>
+                    </div>
+                    <div class='img_wrapper'>
+                        <div class='img_overlay'></div>
+                        <img src='static/violet1.png' class='gallery_img'>
+                    </div>
+                    <div class='img_wrapper'>
+                        <div class='img_overlay'></div>
+                        <img src='static/violet1.png' class='gallery_img'>
+                    </div>
+                    <div class='img_wrapper'>
+                        <div class='img_overlay'></div>
+                        <img src='static/violet1.png' class='gallery_img'>
+                    </div>
+                </div>
+                <div class='img_container'>
+                    <div class='img_wrapper'>
+                        <div class='img_overlay'></div>
+                        <img src='static/violet1.png' class='gallery_img'>
+                    </div>
+                    <div class='img_wrapper'>
+                        <div class='img_overlay'></div>
+                        <img src='static/violet1.png' class='gallery_img'>
+                    </div>
+                    <div class='img_wrapper'>
+                        <div class='img_overlay'></div>
+                        <img src='static/violet1.png' class='gallery_img'>
+                    </div>
+                    <div class='img_wrapper'>
+                        <div class='img_overlay'></div>
+                        <img src='static/violet1.png' class='gallery_img'>
+                    </div>
+                    <div class='img_wrapper'>
+                        <div class='img_overlay'></div>
+                        <img src='static/violet1.png' class='gallery_img'>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <script src='main.js'></script>
+        <!-- <script src='content.js'></script> -->
+    </body>
+</html>

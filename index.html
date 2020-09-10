@@ -174,7 +174,7 @@
                 height: 26.806vw;
                 z-index: 2;
                 opacity: 0; 
-                transition: opacity 1s ease-in-out;
+                transition: opacity 1s ease-in-out, transform .3s ease;
             }
 
             .gallery_img.visible {
@@ -187,7 +187,7 @@
                 left: 0;
                 width: 47.5vw;
                 height: 26.806vw;
-                background: linear-gradient(360deg, #000000 0%, rgba(0, 0, 0, 0) 100%);
+                background:  linear-gradient(360deg, rgba(0 ,0, 0, 1) 0%, rgba(0 ,0, 0, 0) 100%);
                 opacity: 0;
                 transition: .3s ease-out;
                 z-index: 3;
@@ -202,6 +202,7 @@
                 position: absolute;
                 bottom: 1.667vw;
                 left: 1.667vw;
+                z-index: 4;
             }
 
             h2 {
@@ -350,7 +351,6 @@
                 </div>
             </div>
         </main>
-        <script src='main.js'></script>
-        <!-- <script src='content.js'></script> -->
+        <script type="module" src='main.js'></script>
     </body>
 </html>

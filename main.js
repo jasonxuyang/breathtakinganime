@@ -1,3 +1,7 @@
+import {shows} from './content.js';
+console.log(shows);
+console.log(shows[0].imageUrls);
+
 // Init container, body, and cursor
 const main = document.getElementById('main');
 const body = document.body;
@@ -23,7 +27,6 @@ let dx = sx;
 let dy = sy;
 
 // Init limit variables
-
 function moveToCenter(e) {
     let imgBounding = e.target.getBoundingClientRect();
     let centerPosX = imgBounding.left + (imgBounding.width / 2);
@@ -36,14 +39,14 @@ function moveToCenter(e) {
     sy += centerDiffY;
 }
 
-// Lazy Loading Settings
+// Inersection Observer Settings
 const options = {
     root: document.window,
     rootMargin: '0px',
     threshold: 0
 }
 
-//Lazy Loading
+// If intersecting, fade img in
 function callback (entries, observer) {
     // console.log(observer);
     
@@ -56,37 +59,44 @@ function callback (entries, observer) {
         }
     });
 }
-
 let observer = new IntersectionObserver(callback, options);
 
+// Tracking progress of page load
 var loadCounter = 0;
-
 function loadProgressIncrementer(e){
     loadCounter ++;
     console.log(loadCounter + ' images have loaded.');
     if (loadCounter === imgs.length) {
-        console.log('All images have been loaded.')
+        console.log('All images have been loaded.');
     }
 }
 
-for (let i = 0; i < imgs.length; i++) {
-    imgs.item(i).addEventListener('mouseenter', mouseEnter);
-    imgs.item(i).addEventListener('mouseleave', mouseLeave);
-    imgs.item(i).addEventListener('load', loadProgressIncrementer);
-    imgs.item(i).addEventListener('click', moveToCenter);
-    observer.observe(imgs.item(i));
+// Adding event listeners to all the imgs
+for (let img of imgs) {
+    img.addEventListener('mouseenter', mouseEnter);
+    img.addEventListener('mouseleave', mouseLeave);
+    img.addEventListener('load', loadProgressIncrementer);
+    img.addEventListener('click', moveToCenter);
+    // imgs.item(i).addEventListener('mousedown', goNext);
+    observer.observe(img);
 }
 
-// Establishing Event Listeners
+// function goNext(e) {
+//     setTimeout(function() {
+//         moveToCenter(e);
+//     }, 1500);
+// }
+
+// Establishing Event Listeners for navigation and cursor
 window.addEventListener('mousemove', findPointerPosition);
 window.addEventListener('mousemove', findDifference);
 window.addEventListener('mousedown', onPointerDown)
 window.addEventListener('mouseup', onPointerUp)
 
+// Cursor hover animations
 function mouseEnter() {
     cursorOuter.classList.add("cursor_outer_hover");
 }
-
 function mouseLeave() {
     cursorOuter.classList.remove("cursor_outer_hover");
 }

@@ -32,12 +32,14 @@ let Violet_Evergarden = new Show(
         'Violet_Evergarden_3' : 'static/violet3.png',
         'Violet_Evergarden_4' : 'static/violet3.png',
         'Violet_Evergarden_5' : 'static/violet3.png',
-        'Violet_Evergarden_6' : 'static/violet3.png'
+        'Violet_Evergarden_6' : 'static/violet3.png',
+        'Violet_Evergarden_7' : 'static/violet3.png',
+        'Violet_Evergarden_8' : 'static/violet3.png'
     }
 );
 
 let Your_Name = new Show(
-    'Kimi no Na wa',
+    'Your Name',
     'CoMix Wave Films',
     'August 2016',
     'Movie',
@@ -48,7 +50,10 @@ let Your_Name = new Show(
         'Your_Name_2' : 'static/violet2.png',
         'Your_Name_3' : 'static/violet2.png',
         'Your_Name_4' : 'static/violet2.png',
-        'Your_Name_5' : 'static/violet2.png'
+        'Your_Name_5' : 'static/violet2.png',
+        'Your_Name_6' : 'static/violet1.png',
+        'Your_Name_7' : 'static/violet2.png',
+        'Your_Name_8' : 'static/violet2.png'
     }
 );
 

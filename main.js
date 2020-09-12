@@ -6,7 +6,6 @@ import {shows} from './content.js';
 
 // Init container, body, and cursor
 const main = document.getElementById('main');
-const body = document.body;
 const cursorInner = document.getElementById('cursor_inner');
 const cursorOuter = document.getElementById('cursor_outer');
 const container = document.getElementById('gallery');
@@ -28,10 +27,11 @@ let sy = 0;
 let dx = sx;
 let dy = sy;
 
-// Creating the Gallery
+// Init gallery and gallery variables
 var gallery = [];
 let galleryRows, galleryColumns;
 
+// Populates gallery array with images
 function getImgList() {
     shows.forEach(e => {
         for (var k in e.images) {
@@ -46,6 +46,7 @@ function getImgList() {
     shuffleArray(gallery);
 }
 
+// Randomizes img order
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -53,6 +54,7 @@ function shuffleArray(array) {
     }
 }
 
+// Calculates rows and columns in gallery
 function getGallerySize(a) {
     var isPrime = 0;
     const initialLength = a.length;
@@ -69,6 +71,7 @@ function getGallerySize(a) {
     console.log('The gallery will have '+ galleryRows + ' rows and ' + galleryColumns + ' columns.');
 }
 
+// Populates HTML img gallery with content
 function createGallery(){
     var arrayCounter = 0;
     // For each row
@@ -120,13 +123,14 @@ function createGallery(){
     }
 }
 
+// Gallery Stuff
 getImgList();
 getGallerySize(gallery);
 console.log(gallery);
 createGallery();
 
 
-// Init limit variables
+// Moves element to center of screen
 function moveToCenter(e) {
     let imgBounding = e.target.getBoundingClientRect();
     let centerPosX = imgBounding.left + (imgBounding.width / 2);
@@ -177,17 +181,88 @@ for (let img of imgs) {
     img.addEventListener('mouseleave', mouseLeave);
     img.addEventListener('load', loadProgressIncrementer);
     img.addEventListener('click', moveToCenter);
-    // imgs.item(i).addEventListener('mousedown', goNext);
+    
+    img.addEventListener('mousedown', pressingDown, false);
+    img.addEventListener("mouseup", notPressingDown, false);
+    img.addEventListener("mouseleave", notPressingDown, false);
     observer.observe(img);
 }
 
-// function goNext(e) {
-//     setTimeout(function() {
-//         moveToCenter(e);
-//     }, 1500);
-// }
+
+let timerID;
+let counter = 0;
+let holdTarget, holdParent, holdURL;
+let pressHoldDuration = 50;
+
+function pressingDown(e) {
+    holdTarget = e;
+    holdParent = e.target.parentElement;
+    requestAnimationFrame(timer);
+    e.preventDefault();
+    // console.log("Pressing!");
+}
+
+function notPressingDown(e) {
+    // Stop the timer
+    cancelAnimationFrame(timerID);
+    counter = 0;
+    // console.log("Not pressing!");
+}
+
+function timer() {
+    console.log("Timer tick!");
+    if (counter < pressHoldDuration) {
+        timerID = requestAnimationFrame(timer);
+        counter++;
+    } else {
+        // console.log("Press threshold reached!");
+        enterExplorer();
+    }
+}
+
+function enterExplorer() {
+    // console.log("pressHold event fired!");
+    holdTarget.target.removeEventListener('click', moveToCenter);
+    moveToCenter(holdTarget);
+    setTimeout(transition, 500);
+    setTimeout(redirect, 2000);
+}
+
+function transition() {
+    let children = holdParent.children;
+    let overlay = children.item(0);
+    let img = children.item(1);
+
+    // remove overlay
+    overlay.style.opacity = '0';
+
+    // translating img in perpective
+    let imgBounding = img.getBoundingClientRect();
+    let containerBounding = container.getBoundingClientRect();
+    let centerPosX = imgBounding.left + (imgBounding.width / 2); // finding x center of img
+    let centerPosY = imgBounding.top + (imgBounding.height / 2); // finding y center of img
+    let relativePosLeft = centerPosX - containerBounding.left; // finding relative x pos of img center to container
+    let relativePosTop = centerPosY - containerBounding.top; // finding relative y pos of img center to container
+    let leftPct = relativePosLeft / containerBounding.width; // calculating x percent for perspective origin
+    let topPct = relativePosTop / containerBounding.height; // calculating y percent for perspective origin
+    img.style.transform = `translateZ(${-3}px)`;
+    container.style.perspectiveOrigin = `${leftPct * 100}% ${topPct * 100}%`;
+    
+    const containerWrapper = document.getElementById('gallery_wrapper');
+    containerWrapper.style.perspectiveOrigin = `${leftPct * 100}% ${topPct * 100}%`;
+    
+    // translating container in perspective
+    container.style.transform = `translateZ(${7}px)`;
+    container.style.opacity = `0`;
+}
+
+function redirect() {
+    window.location.href = 'index.html';
+}
+
 
 // Establishing Event Listeners for navigation and cursor
+window.addEventListener('mousemove', initialPointer);
 window.addEventListener('mousemove', findPointerPosition);
 window.addEventListener('mousemove', findDifference);
 window.addEventListener('mousedown', onPointerDown)
@@ -211,6 +286,13 @@ function onPointerDown() {
 function onPointerUp() {
     pointerDownTarget = 0;
     // console.log("up!");
+}
+
+// Hide Cursors initially
+function initialPointer() {
+    cursorInner.style.opacity = 1;
+    cursorOuter.style.opacity = 1;
+    window.removeEventListener('mousemove', initialPointer);
 }
 
 // Find position of cursor relative to window
@@ -286,13 +368,22 @@ function pastLimits() {
 
 // Translating to Start Position (Middle of Gallery)
 function startPosition() {
-    let imgBounding = container.getBoundingClientRect();
-    diffX = -(imgBounding.width - window.innerWidth) / 2;
-    diffY = -(imgBounding.height - window.innerHeight) / 2;
+    if (Number.isInteger(gallery.length / 2)) {
+        let imgBounding = container.getBoundingClientRect();
+        diffX = -(imgBounding.width - window.innerWidth) / 2;
+        diffY = -(imgBounding.height - window.innerHeight) / 2;
+        diffX += window.innerWidth * 0.286806;
+        diffY += window.innerWidth * 0.183333;
+    } else {
+        let imgBounding = container.getBoundingClientRect();
+        diffX = -(imgBounding.width - window.innerWidth) / 2;
+        diffY = -(imgBounding.height - window.innerHeight) / 2;
+    }
     sx += diffX;
     sy += diffY;
 }
 
+console.log(gallery);
 // Linear Interpolation method for smooth scrolling
 function lerp(a, b, n) {
     return (1 - n) * a + n * b;

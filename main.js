@@ -1,6 +1,8 @@
 import {shows} from './content.js';
-console.log(shows);
-console.log(shows[0].imageUrls);
+// console.log(shows);
+// console.log(shows[0].images);
+// console.log(typeof shows);
+
 
 // Init container, body, and cursor
 const main = document.getElementById('main');
@@ -25,6 +27,104 @@ let sx = 0;
 let sy = 0;
 let dx = sx;
 let dy = sy;
+
+// Creating the Gallery
+var gallery = [];
+let galleryRows, galleryColumns;
+
+function getImgList() {
+    shows.forEach(e => {
+        for (var k in e.images) {
+            gallery.push({
+                'showName': e.name,
+                'studio': e.studio,
+                'imgID' : k,
+                'imgURL': e.images[k]
+            })
+        }
+    })
+    shuffleArray(gallery);
+}
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+function getGallerySize(a) {
+    var isPrime = 0;
+    const initialLength = a.length;
+    while (isPrime === 0) {
+        if (Number.isInteger(Math.sqrt(a.length))) {
+            galleryRows = Math.sqrt(a.length);
+            galleryColumns = Math.sqrt(a.length);
+            isPrime = 1;
+            console.log('images removed: ' + (initialLength - a.length));
+        } else {
+            a.pop();
+        }
+    }
+    console.log('The gallery will have '+ galleryRows + ' rows and ' + galleryColumns + ' columns.');
+}
+
+function createGallery(){
+    var arrayCounter = 0;
+    // For each row
+    for (var i = 0; i < galleryRows; i++) {
+        // Create a new img container
+        var newImgContainer = document.createElement('div');
+        newImgContainer.classList.add('img_container');
+        container.appendChild(newImgContainer);
+
+        // For each column
+        for (var j = 0; j < galleryColumns; j++) {
+            // Create an img wrapper within the container
+            var newImgWrapper = document.createElement('div');
+            newImgWrapper.classList.add('img_wrapper');
+            newImgContainer.appendChild(newImgWrapper);
+
+            // Add overlay to wrapper
+            var newImgOverlay = document.createElement('div');
+            newImgOverlay.classList.add('img_overlay');
+            newImgWrapper.appendChild(newImgOverlay);
+
+            // Add content to overlay
+            var newImgOverlayContent = document.createElement('div');
+            newImgOverlayContent.classList.add('img_content');
+            newImgOverlay.appendChild(newImgOverlayContent);
+
+            // Add animation studio to overlay content
+            var newImgStudio = document.createElement('h3');
+            var studioText = document.createTextNode(gallery[arrayCounter].studio);
+            newImgStudio.appendChild(studioText);
+            newImgOverlayContent.appendChild(newImgStudio);
+
+            // Add animation name to overlay content
+            var newImgShowName = document.createElement('h2');
+            var showNameText = document.createTextNode(gallery[arrayCounter].showName);
+            newImgShowName.appendChild(showNameText);
+            newImgOverlayContent.appendChild(newImgShowName);
+
+            // Add img to wrapper
+            var newImg = document.createElement('img');
+            newImg.classList.add('gallery_img');
+            newImg.src = gallery[arrayCounter].imgURL;
+            newImg.id = gallery[arrayCounter].imgID;
+            newImgWrapper.appendChild(newImg);
+
+            // Iterate counter
+            arrayCounter ++;
+        }
+    }
+}
+
+getImgList();
+getGallerySize(gallery);
+console.log(gallery);
+createGallery();
+
 
 // Init limit variables
 function moveToCenter(e) {

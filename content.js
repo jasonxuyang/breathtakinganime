@@ -1,14 +1,3 @@
-// var show = new Object(),
-//     name = 'string',
-//     studio = 'string',
-//     season = 'string',
-//     length = 'string',
-//     status = 'string',
-//     synopsisSource = 'string',
-//     synopsis = 'string',
-//     platforms = [],
-//     coverImage = 'string'
-//     imagesUrls = {}
 
 class Show{
     constructor(
@@ -18,8 +7,7 @@ class Show{
         length,
         status,
         platforms,
-        coverImage,
-        imageUrls
+        images
     ){
     this.name = name;
     this.studio = studio;
@@ -27,8 +15,7 @@ class Show{
     this.length = length;
     this.status = status;
     this.platforms = platforms;
-    this.coverImage = coverImage;
-    this.imageUrls = imageUrls;
+    this.images = images;
     }
 }
 
@@ -39,12 +26,14 @@ let Violet_Evergarden = new Show(
     '13 Episodes',
     'Finished airing',
     ['Netflix'],
-    'static/violet1.png',
-    [
-        'static/violet1.png',
-        'static/violet2.png',
-        'static/vioelt3.png'
-    ]
+    {
+        'Violet_Evergarden_1' : 'static/violet1.png',
+        'Violet_Evergarden_2' : 'static/violet2.png',
+        'Violet_Evergarden_3' : 'static/violet3.png',
+        'Violet_Evergarden_4' : 'static/violet3.png',
+        'Violet_Evergarden_5' : 'static/violet3.png',
+        'Violet_Evergarden_6' : 'static/violet3.png'
+    }
 );
 
 let Your_Name = new Show(
@@ -54,12 +43,13 @@ let Your_Name = new Show(
     'Movie',
     'Finished airing',
     ['Amazon Prime Video'],
-    'static/violet1.png',
-    [
-        'static/violet1.png',
-        'static/violet2.png',
-        'static/vioelt3.png'
-    ]
+    {
+        'Your_Name_1' : 'static/violet1.png',
+        'Your_Name_2' : 'static/violet2.png',
+        'Your_Name_3' : 'static/violet2.png',
+        'Your_Name_4' : 'static/violet2.png',
+        'Your_Name_5' : 'static/violet2.png'
+    }
 );
 
 const shows = [

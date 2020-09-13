@@ -10,6 +10,8 @@ const cursorInner = document.getElementById('cursor_inner');
 const cursorOuter = document.getElementById('cursor_outer');
 const container = document.getElementById('gallery');
 const imgs = document.getElementsByClassName('gallery_img')
+const navLeft = document.getElementById('nav_left');
+const navRight = document.getElementById('nav_right');
 
 // Init variables to keep track of mouse position
 let posInnerX = 0;
@@ -19,6 +21,21 @@ let posOuterY = 0;
 let pointerPosX = posOuterX;
 let pointerPosY = posOuterY;
 let pointerDownTarget = 0;
+
+// Init variables to keep track of mouse sizes
+let outerScale, outerScaleUpdate, innerScale, innerScaleUpdate, outerBorder, outerBorderUpdate;
+outerScale = .25;
+innerScale = 1;
+outerBorder = 4;
+outerBorderUpdate = outerBorder;
+innerScaleUpdate = innerScale;
+outerScaleUpdate = outerScale;
+
+// Init press and hold variables
+let timerID, counterPct;
+let counter = 0;
+let holdTarget, holdParent, holdURL
+let pressHoldDuration = 40;
 
 // Init variables to keep track of container position
 let diffX, diffY;
@@ -126,7 +143,6 @@ function createGallery(){
 // Gallery Stuff
 getImgList();
 getGallerySize(gallery);
-console.log(gallery);
 createGallery();
 
 
@@ -181,19 +197,27 @@ for (let img of imgs) {
     img.addEventListener('mouseleave', mouseLeave);
     img.addEventListener('load', loadProgressIncrementer);
     img.addEventListener('click', moveToCenter);
-    
-    img.addEventListener('mousedown', pressingDown, false);
-    img.addEventListener("mouseup", notPressingDown, false);
-    img.addEventListener("mouseleave", notPressingDown, false);
     observer.observe(img);
 }
 
+// Cursor hover animations
+function mouseEnter(e) {
+    outerScale = 1;
+    outerBorder = 1;
+    e.target.addEventListener('mousedown', pressingDown);
+    e.target.addEventListener("mouseup", notPressingDown);
+    e.target.addEventListener("mouseleave", notPressingDown);
+}
+function mouseLeave(e) {
+    outerScale = .25;
+    outerBorder = 4;
+    e.target.removeEventListener('mousedown', pressingDown);
+    e.target.removeEventListener("mouseup", notPressingDown);
+    e.target.removeEventListener("mouseleave", notPressingDown);
+    cancelAnimationFrame(timerID);
+}
 
-let timerID;
-let counter = 0;
-let holdTarget, holdParent, holdURL;
-let pressHoldDuration = 50;
-
+// Cursor pressing on img
 function pressingDown(e) {
     holdTarget = e;
     holdParent = e.target.parentElement;
@@ -202,32 +226,42 @@ function pressingDown(e) {
     // console.log("Pressing!");
 }
 
+// When not pressing on an img
 function notPressingDown(e) {
     // Stop the timer
     cancelAnimationFrame(timerID);
+    outerScale = 1;
+    outerBorder = 1;
     counter = 0;
     // console.log("Not pressing!");
 }
 
+// Timer function for hold animaion
 function timer() {
-    console.log("Timer tick!");
+    console.log("Timer tick! " + counterPct);
     if (counter < pressHoldDuration) {
+        counterPct = Math.round((counter / (pressHoldDuration - 1)) * 100) / 100;
         timerID = requestAnimationFrame(timer);
         counter++;
+        outerScale = (1 - counterPct) * .5;
     } else {
         // console.log("Press threshold reached!");
         enterExplorer();
     }
 }
 
+// Entering animation explorer
 function enterExplorer() {
     // console.log("pressHold event fired!");
     holdTarget.target.removeEventListener('click', moveToCenter);
     moveToCenter(holdTarget);
-    setTimeout(transition, 500);
+    cursorInner.style.opacity = '0';
+    cursorOuter.style.opacity = '0';
+    setTimeout(transition, 300);
     setTimeout(redirect, 2000);
 }
 
+// Transiioning
 function transition() {
     let children = holdParent.children;
     let overlay = children.item(0);
@@ -236,7 +270,7 @@ function transition() {
     // remove overlay
     overlay.style.opacity = '0';
 
-    // translating img in perpective
+    // finding persepctive coordinates
     let imgBounding = img.getBoundingClientRect();
     let containerBounding = container.getBoundingClientRect();
     let centerPosX = imgBounding.left + (imgBounding.width / 2); // finding x center of img
@@ -245,15 +279,25 @@ function transition() {
     let relativePosTop = centerPosY - containerBounding.top; // finding relative y pos of img center to container
     let leftPct = relativePosLeft / containerBounding.width; // calculating x percent for perspective origin
     let topPct = relativePosTop / containerBounding.height; // calculating y percent for perspective origin
-    img.style.transform = `translateZ(${-3}px)`;
-    container.style.perspectiveOrigin = `${leftPct * 100}% ${topPct * 100}%`;
     
+    // center and translate the img in perspctive
+    container.style.perspectiveOrigin = `${leftPct * 100}% ${topPct * 100}%`;
+    // img.style.transform = `translateZ(${-5}px)`;
+    
+    // centering wrapper in persepective
     const containerWrapper = document.getElementById('gallery_wrapper');
     containerWrapper.style.perspectiveOrigin = `${leftPct * 100}% ${topPct * 100}%`;
     
     // translating container in perspective
-    container.style.transform = `translateZ(${7}px)`;
+    container.style.transform = `translateZ(${-.15}vw)`;
     container.style.opacity = `0`;
+    container.style.pointerEvents = 'none';
+
+    // transitioning nav
+    navLeft.style.opacity = '0';
+    navLeft.style.marginTop = '-1vw'
+    navRight.style.opacity = '0';
+    navRight.style.marginTop = '-1vw'
 }
 
 function redirect() {
@@ -266,14 +310,14 @@ window.addEventListener('mousemove', initialPointer);
 window.addEventListener('mousemove', findPointerPosition);
 window.addEventListener('mousemove', findDifference);
 window.addEventListener('mousedown', onPointerDown)
-window.addEventListener('mouseup', onPointerUp)
+window.addEventListener('mouseup', onPointerUp);
+window.addEventListener('wheel', scroll);
 
-// Cursor hover animations
-function mouseEnter() {
-    cursorOuter.classList.add("cursor_outer_hover");
-}
-function mouseLeave() {
-    cursorOuter.classList.remove("cursor_outer_hover");
+// On scroll, update position variables
+function scroll(e) {
+    console.log(e.deltaX + ', ' + e.deltaY);
+    sx -= e.deltaX;
+    sy -= e.deltaY;
 }
 
 // Detect if mouse is pressed
@@ -297,13 +341,11 @@ function initialPointer() {
 
 // Find position of cursor relative to window
 function findPointerPosition(e) {
-    let styleFinder = getComputedStyle(cursorOuter);
-    let borderWidth = parseInt(styleFinder.borderTopWidth);
-    // console.log(cursorOuter.style.);
     posInnerX = e.clientX - (cursorInner.clientWidth / 2);
     posInnerY = e.clientY - (cursorInner.clientHeight / 2);
-    posOuterX = e.clientX - ((cursorOuter.clientWidth + (2 * borderWidth)) / 2);
-    posOuterY = e.clientY - ((cursorOuter.clientHeight + (2 * borderWidth)) / 2);
+    posOuterX = e.clientX - ((cursorOuter.clientWidth + (2 * outerBorder)) / 2);
+    posOuterY = e.clientY - ((cursorOuter.clientHeight + (2 * outerBorder)) / 2);
+
     // console.log("Mouse position: " + posX + ", " + posY);
 }
 
@@ -313,8 +355,19 @@ function updatePointerPosition() {
     pointerPosY = lerp(pointerPosY, posOuterY, 0.15);
     pointerPosX = Math.floor(pointerPosX * 100) / 100;
     pointerPosY = Math.floor(pointerPosY * 100) / 100;
-    cursorInner.style.transform = `translate(${posInnerX}px, ${posInnerY}px)`;
-    cursorOuter.style.transform = `translate(${pointerPosX}px, ${pointerPosY}px)`;
+
+    outerScaleUpdate = lerp(outerScaleUpdate, outerScale, 0.15);
+    outerScaleUpdate = Math.floor(outerScaleUpdate * 100) / 100;
+
+    innerScaleUpdate = lerp(innerScaleUpdate, innerScale, 0.15);
+    innerScaleUpdate = Math.floor(innerScaleUpdate * 100) / 100;
+
+    outerBorderUpdate = lerp(outerBorderUpdate, outerBorder, 0.15);
+    outerBorderUpdate = Math.floor(outerBorderUpdate * 100) / 100;
+
+    cursorInner.style.transform = `translate(${posInnerX}px, ${posInnerY}px) scale(${innerScaleUpdate}`;
+    cursorOuter.style.transform = `translate(${pointerPosX}px, ${pointerPosY}px) scale(${outerScaleUpdate}`;
+    cursorOuter.style.border = `rgba(255, 255, 255, .75) solid ${outerBorderUpdate}px`;
 }
 
 // Find position of container
@@ -383,7 +436,6 @@ function startPosition() {
     sy += diffY;
 }
 
-console.log(gallery);
 // Linear Interpolation method for smooth scrolling
 function lerp(a, b, n) {
     return (1 - n) * a + n * b;
@@ -399,6 +451,7 @@ function render() {
     // Function here that checks position of 
     updatePosition();
     updatePointerPosition();
+    // updatePointerSize();
     pastLimits();
     // And we loop again.
     window.requestAnimationFrame(render);

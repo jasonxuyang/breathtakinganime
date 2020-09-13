@@ -177,11 +177,12 @@
                 height: 100%;
                 z-index: 2;
                 opacity: 0; 
-                transition: opacity 1s ease-in-out, transform 1.5s ease;
+                transition: opacity 1.5s ease-in, transform 1.5s ease;
                 transform-style: preserve-3d;
             }
 
             .gallery_img.visible {
+                transition: opacity 1.5s ease-in;
                 opacity: 1;
             }
 
@@ -253,14 +254,12 @@
                 transition: opacity .5s ease-in;
             }
 
-            .explorer_img_container {
-                display: flex;
-                flex-direction: row;
-                flex-wrap: nowrap;
-                z-index: 5;
+            #explorer_img_container {
+                position: relative;
+                z-index: 1;
             }
 
-            .explorer_img_container ::-webkit-scrollbar {
+            #explorer_img_container ::-webkit-scrollbar {
                 width: 0px;
                 background: transparent;
             }
@@ -271,6 +270,9 @@
                 height: 100vh;
                 object-fit: cover;
                 object-position: 50% 50%;
+                position: absolute;
+                left: 0;
+                top: 0;
             }
 
             .explorer_img_overlay_top {
@@ -441,7 +443,7 @@
         </nav>
         <nav id='nav_right'>
             <div class='nav_links'>
-                <a href="/index" class='nav_link'>Shows</a>
+                <a href="" class='nav_link'>Shows</a>
                 <a href="" class='nav_link'>About</a>
             </div>
         </nav>
@@ -462,12 +464,12 @@
 
             <div id='carousel_controls'>
                 <div class='left_controls'>
-                    <p class='right'>Previous</p>
+                    <p id='carousel_previous' class='right'>Previous</p>
                     <div id='carousel_previous_line'></div>
                     <p class='left'>3/8</p>
                 </div>
                 <div class='right_controls'>
-                    <p class='left'>Next</p>
+                    <p id='carousel_next' class='left'>Next</p>
                     <div id='carousel_next_line'></div>
                     <p class='right'>5/8</p>
                 </div>
@@ -496,7 +498,7 @@
             </audio>
             
             <div class='explorer_img_overlay_top'></div>
-            <div class='explorer_img_container'>
+            <div id='explorer_img_container'>
                 <img src='static/violet1.png' class='explorer_img'>
                 <img src='static/violet1.png' class='explorer_img'>
                 <img src='static/violet1.png' class='explorer_img'>

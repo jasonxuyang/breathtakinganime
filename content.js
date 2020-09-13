@@ -34,7 +34,12 @@ let Violet_Evergarden = new Show(
         'Violet_Evergarden_5' : 'static/violet3.png',
         'Violet_Evergarden_6' : 'static/violet3.png',
         'Violet_Evergarden_7' : 'static/violet3.png',
-        'Violet_Evergarden_8' : 'static/violet3.png'
+        'Violet_Evergarden_9' : 'static/violet3.png',
+        'Violet_Evergarden_10' : 'static/violet3.png',
+        'Violet_Evergarden_11' : 'static/violet3.png',
+        'Violet_Evergarden_12' : 'static/violet3.png',
+        'Violet_Evergarden_13' : 'static/violet3.png',
+        'Violet_Evergarden_14' : 'static/violet3.png'
     }
 );
 
@@ -54,6 +59,11 @@ let Your_Name = new Show(
         'Your_Name_6' : 'static/violet1.png',
         'Your_Name_7' : 'static/violet2.png',
         'Your_Name_8' : 'static/violet2.png',
+        'Your_Name_9' : 'static/violet2.png',
+        'Your_Name_10' : 'static/violet2.png',
+        'Your_Name_11' : 'static/violet2.png',
+        'Your_Name_12' : 'static/violet2.png',
+        'Your_Name_13' : 'static/violet2.png',
     }
 );
 

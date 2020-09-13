@@ -14,18 +14,20 @@ const navRight = document.getElementById('nav_right');
 
 // Init explorer
 const explorer = document.getElementById('animation_explorer_container');
+const explorerContainer = document.getElementById('explorer_img_container');
 const animationDetails = document.getElementById('animation_details');
 const animationPlatforms = document.getElementById('animation_platforms');
+const carouselNext = document.getElementById('carousel_next');
+const carouselPrevious = document.getElementById('carousel_previous');
+
+// Init audio variables
+var audioPlaying = 0;
 const audioPlayer = document.getElementById('audio_player');
 const audioPlayButton = document.getElementById('play_button');
 const audioTimeMarker = document.getElementById('audio_time');
 const audioTimeLeftMarker = document.getElementById('audio_time_left');
 const audioLoadBar = document.getElementById('audio_load_bar');
 const audioProgressBar = document.getElementById('audio_progress_bar');
-
-
-// Init audio variables
-var audioPlaying = 0;
 
 // Init variables to keep track of mouse position
 let posInnerX = 0;
@@ -189,7 +191,7 @@ function callback (entries, observer) {
         if (imgIntersecting == true) {
             entry.target.classList.add('visible');
         } else {
-            entry.target.classList.remove('visible');
+            // entry.target.classList.remove('visible');
         }
     });
 }
@@ -355,6 +357,8 @@ function redirect() {
     // window.addEventListener('wheel', explorerScroll);
     window.addEventListener('mousemove', checkEdges)
     explorer.addEventListener('mousemove', showAnimationInfo);
+    carouselNext.addEventListener('click', explorerMoveNext);
+    carouselPrevious.addEventListener('click', explorerMovePrevious);
     audioPlayButton.addEventListener('click', toggleAudio)
     // audioPlayer.addEventListener('progress', buffering);
     audioPlayer.addEventListener('timeupdate', updateAudioTime);
@@ -462,12 +466,12 @@ function hideCursor() {
     cursorOuter.style.opacity = '0';
 }
 
-// let explorerDiffX;
-// let explorerDiffy;
-// let explorerSx = 0;
-// let explorerSy = 0;
-// let explorerDx = explorerSx;
-// let explorerDy = explorerSy;
+let explorerDiffX;
+let explorerDiffy;
+let explorerSx = 0;
+let explorerSy = 0;
+let explorerDx = explorerSx;
+let explorerDy = explorerSy;
 
 
 // function explorerFindDifference(e) {
@@ -480,12 +484,15 @@ function hideCursor() {
 //     explorerMoveNext();
 // }
 
-// function explorerMoveNext() {
-//     if (explorerDiffX < 1) {
-//         explorerSx -= window.innerWidth;
-//         console.log(explorerSx);
-//     }
-// }
+function explorerMoveNext() {
+    // explorerSx -= window.innerWidth;
+    console.log(explorerSx);
+}
+
+function explorerMovePrevious() {
+    // explorerSx += window.innerWidth;
+    console.log(explorerSx);
+}
 
 // function explorerUpdatePosition() {
 //     explorerDx = lerp(explorerDx, explorerSx, 0.08);
@@ -493,7 +500,7 @@ function hideCursor() {
 //     explorerDx = Math.floor(explorerDx * 100) / 100;
 //     explorerDy = Math.floor(explorerDy * 100) / 100;
 //     // console.log(dx + ", " + dy);
-//     explorer.style.transform = `translate(${explorerDx}px, ${explorerDy}px)`;
+//     explorerContainer.style.transform = `translate(${explorerDx}px, ${explorerDy}px)`;
 // }
 
 
@@ -573,8 +580,8 @@ function findDifference(e) {
 // On scroll, update position variables
 function scroll(e) {
     console.log(e.deltaX + ', ' + e.deltaY);
-    sx -= e.deltaX;
-    sy -= e.deltaY;
+    sx -= e.deltaX * 2;
+    sy -= e.deltaY * 2;
 }
 
 

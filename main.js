@@ -3,8 +3,7 @@ import {shows} from './content.js';
 // console.log(shows[0].images);
 // console.log(typeof shows);
 
-
-// Init container, body, and cursor
+// Init container, body, cursor
 const main = document.getElementById('main');
 const cursorInner = document.getElementById('cursor_inner');
 const cursorOuter = document.getElementById('cursor_outer');
@@ -12,6 +11,21 @@ const container = document.getElementById('gallery');
 const imgs = document.getElementsByClassName('gallery_img')
 const navLeft = document.getElementById('nav_left');
 const navRight = document.getElementById('nav_right');
+
+// Init explorer
+const explorer = document.getElementById('animation_explorer_container');
+const animationDetails = document.getElementById('animation_details');
+const animationPlatforms = document.getElementById('animation_platforms');
+const audioPlayer = document.getElementById('audio_player');
+const audioPlayButton = document.getElementById('play_button');
+const audioTimeMarker = document.getElementById('audio_time');
+const audioTimeLeftMarker = document.getElementById('audio_time_left');
+const audioLoadBar = document.getElementById('audio_load_bar');
+const audioProgressBar = document.getElementById('audio_progress_bar');
+
+
+// Init audio variables
+var audioPlaying = 0;
 
 // Init variables to keep track of mouse position
 let posInnerX = 0;
@@ -26,7 +40,7 @@ let pointerDownTarget = 0;
 let outerScale, outerScaleUpdate, innerScale, innerScaleUpdate, outerBorder, outerBorderUpdate;
 outerScale = .25;
 innerScale = 1;
-outerBorder = 4;
+outerBorder = 8;
 outerBorderUpdate = outerBorder;
 innerScaleUpdate = innerScale;
 outerScaleUpdate = outerScale;
@@ -203,14 +217,14 @@ for (let img of imgs) {
 // Cursor hover animations
 function mouseEnter(e) {
     outerScale = 1;
-    outerBorder = 1;
+    outerBorder = 2;
     e.target.addEventListener('mousedown', pressingDown);
     e.target.addEventListener("mouseup", notPressingDown);
     e.target.addEventListener("mouseleave", notPressingDown);
 }
 function mouseLeave(e) {
     outerScale = .25;
-    outerBorder = 4;
+    outerBorder = 8;
     e.target.removeEventListener('mousedown', pressingDown);
     e.target.removeEventListener("mouseup", notPressingDown);
     e.target.removeEventListener("mouseleave", notPressingDown);
@@ -231,14 +245,14 @@ function notPressingDown(e) {
     // Stop the timer
     cancelAnimationFrame(timerID);
     outerScale = 1;
-    outerBorder = 1;
+    outerBorder = 2;
     counter = 0;
     // console.log("Not pressing!");
 }
 
 // Timer function for hold animaion
 function timer() {
-    console.log("Timer tick! " + counterPct);
+    // console.log("Timer tick! " + counterPct);
     if (counter < pressHoldDuration) {
         counterPct = Math.round((counter / (pressHoldDuration - 1)) * 100) / 100;
         timerID = requestAnimationFrame(timer);
@@ -295,30 +309,202 @@ function transition() {
 
     // transitioning nav
     navLeft.style.opacity = '0';
-    navLeft.style.marginTop = '-1vw'
+    navLeft.style.marginTop = '-.25vw'
     navRight.style.opacity = '0';
-    navRight.style.marginTop = '-1vw'
+    navRight.style.marginTop = '-.25vw'
 }
 
+// console.log(history.state);
+
+let field = document.getElementById("field");
+var htmlContents = document.documentElement.innerHTML;
+localStorage.setItem('myBook', JSON.stringify(htmlContents));
+localStorage.getItem('myBook');
+
+
+// function pushState(show) {
+//     var state = { selectedShow : show},
+//         title = 'Page title',
+//         path = '/' + show;
+    
+//         history.pushState(state, title, path);
+// }
+
+// window.addEventListener('popstate', doSomething);
+
+
+// pushState('home');
+
 function redirect() {
-    window.location.href = 'index.html';
+    // pushState('violet_evergarden');
+    container.style.visibility = 'hidden';
+    explorer.style.visibility = 'visible';
+    explorer.style.opacity = '1';
+    
+    navLeft.style.opacity = '1';
+    navLeft.style.marginTop = '0vw'
+    navRight.style.opacity = '1';
+    navRight.style.marginTop = '0vw'
+
+    cursorInner.style.opacity = '1';
+    cursorOuter.style.opacity = '1';
+
+    window.removeEventListener('mousemove', findDifference);
+    window.removeEventListener('wheel', scroll);
+    // window.addEventListener('mousemove', explorerFindDifference);
+    // window.addEventListener('wheel', explorerScroll);
+    window.addEventListener('mousemove', checkEdges)
+    explorer.addEventListener('mousemove', showAnimationInfo);
+    audioPlayButton.addEventListener('click', toggleAudio)
+    // audioPlayer.addEventListener('progress', buffering);
+    audioPlayer.addEventListener('timeupdate', updateAudioTime);
+    
+    showAnimationInfo();
+    playAudio();
 }
+
+// console.log(audioPlayer.buffered);
+
+// function buffering() {
+//     console.log(audioPlayer.buffered);
+// }
+
+function pad2(number) {
+    return (number < 10 ? '0' : '') + number
+}
+
+function updateAudioTime() {
+    // get audio timestamps
+    var audioTime = audioPlayer.currentTime;
+    var audioLength = audioPlayer.duration;
+    audioTime = Math.floor(audioTime);
+    audioLength = Math.floor(audioLength);
+    var audioTimeLeft = audioLength - audioTime;
+
+    // convert to minutes and seconds
+    var audioTimeMinutes = Math.floor(audioTime / 60);
+    var audioTimeSeconds = pad2(audioTime % 60);
+    var audioTimeLeftMinutes = Math.floor(audioTimeLeft / 60);
+    var audioTimeLeftSeconds = pad2(audioTimeLeft % 60);
+    
+    // update time markers
+    audioTimeMarker.innerHTML = audioTimeMinutes + ':' + audioTimeSeconds;
+    audioTimeLeftMarker.innerHTML = audioTimeLeftMinutes + ':' + audioTimeLeftSeconds
+    window.requestAnimationFrame(updateAudioProgressBar);
+}
+
+function updateAudioProgressBar() {
+    audioProgressBar.style.width = `${(audioPlayer.currentTime / audioPlayer.duration) * 80.278}vw`;
+    window.requestAnimationFrame(updateAudioProgressBar);
+}
+
+function toggleAudio() {
+    if (audioPlaying == 1) {
+        pauseAudio();
+    } else if (audioPlaying == 0) {
+        playAudio();
+    }
+}
+
+function playAudio() {
+    audioPlayer.play();
+    audioPlaying = 1;
+    audioPlayButton.src='/static/icon_pause.svg';
+}
+
+function pauseAudio() {
+    audioPlayer.pause();
+    audioPlaying = 0;
+    audioPlayButton.src='/static/icon_play.svg';
+}
+
+function checkEdges(e) {
+    var x = e.clientX;
+    var y = e.clientY;
+    let w1 = window.innerWidth * .02;
+    let w2 = window.innerWidth * .98;
+    let h1 = window.innerHeight * .98;
+    let h2 = window.innerHeight * .02;
+    if((x>w2 || x<w1) || (y>h1 || y<h2)){
+        console.log("We are in the outer area");
+        hideAnimationInfo();
+        hideCursor();
+    } else {
+        showCursor();
+    }
+    // console.log('Mouse position: ' + x + ', ' + y);
+    // console.log('x limits: ' + w1 + ', ' + w2 + ' / '+ 'y limits: ' + h1 + ', ' + h2)
+}
+
+function showAnimationInfo() {
+    animationDetails.style.opacity = '1';
+    animationPlatforms.style.opacity = '1';
+    animationDetails.style.marginTop = '0vw';
+    animationPlatforms.style.marginTop = '0vw';
+    clearTimeout(timer);
+    timer=setTimeout(hideAnimationInfo, 5000);
+}
+
+function hideAnimationInfo() {
+    animationDetails.style.opacity = '0';
+    animationPlatforms.style.opacity = '0';
+    animationDetails.style.marginTop = '-.25vw';
+    animationPlatforms.style.marginTop = '-.25vw';
+}
+
+function showCursor() {
+    cursorInner.style.opacity = '1';
+    cursorOuter.style.opacity = '1';
+}
+
+function hideCursor() {
+    cursorInner.style.opacity = '0';
+    cursorOuter.style.opacity = '0';
+}
+
+// let explorerDiffX;
+// let explorerDiffy;
+// let explorerSx = 0;
+// let explorerSy = 0;
+// let explorerDx = explorerSx;
+// let explorerDy = explorerSy;
+
+
+// function explorerFindDifference(e) {
+//     e.preventDefault();
+//     // If mouse is pressed
+//     if (pointerDownTarget === 1) {
+//         explorerDiffX = e.movementX;
+//         console.log(explorerDiffX);
+//     }
+//     explorerMoveNext();
+// }
+
+// function explorerMoveNext() {
+//     if (explorerDiffX < 1) {
+//         explorerSx -= window.innerWidth;
+//         console.log(explorerSx);
+//     }
+// }
+
+// function explorerUpdatePosition() {
+//     explorerDx = lerp(explorerDx, explorerSx, 0.08);
+//     explorerDy = lerp(explorerDy, explorerSy, 0.08);
+//     explorerDx = Math.floor(explorerDx * 100) / 100;
+//     explorerDy = Math.floor(explorerDy * 100) / 100;
+//     // console.log(dx + ", " + dy);
+//     explorer.style.transform = `translate(${explorerDx}px, ${explorerDy}px)`;
+// }
+
 
 
 // Establishing Event Listeners for navigation and cursor
 window.addEventListener('mousemove', initialPointer);
 window.addEventListener('mousemove', findPointerPosition);
-window.addEventListener('mousemove', findDifference);
 window.addEventListener('mousedown', onPointerDown)
 window.addEventListener('mouseup', onPointerUp);
+window.addEventListener('mousemove', findDifference);
 window.addEventListener('wheel', scroll);
-
-// On scroll, update position variables
-function scroll(e) {
-    console.log(e.deltaX + ', ' + e.deltaY);
-    sx -= e.deltaX;
-    sy -= e.deltaY;
-}
 
 // Detect if mouse is pressed
 function onPointerDown() {
@@ -384,6 +570,14 @@ function findDifference(e) {
     }
 }
 
+// On scroll, update position variables
+function scroll(e) {
+    console.log(e.deltaX + ', ' + e.deltaY);
+    sx -= e.deltaX;
+    sy -= e.deltaY;
+}
+
+
 // Update position of container
 function updatePosition() {
     dx = lerp(dx, sx, 0.08);
@@ -399,22 +593,22 @@ function pastLimits() {
     let imgBounding = container.getBoundingClientRect();
     // If  scroll past left limit
     if (imgBounding.left >= 0) {
-        diffX =  -imgBounding.left / 16;
+        diffX =  -imgBounding.left / 8;
         sx += diffX;
     }
     // If  scroll past right limit
     if (imgBounding.right <= window.innerWidth) {
-        diffX = (window.innerWidth - imgBounding.right) / 16;
+        diffX = (window.innerWidth - imgBounding.right) / 8;
         sx += diffX;
     }
     // If  scroll past top limit
     if (imgBounding.top >= 0) {
-        diffY = -imgBounding.top / 16;
+        diffY = -imgBounding.top / 8;
         sy += diffY;
     }
     // If  scroll past bottom limit
     if (imgBounding.bottom <= window.innerHeight) {
-        diffY = (window.innerHeight - imgBounding.bottom) / 16;
+        diffY = (window.innerHeight - imgBounding.bottom) / 8;
         sy += diffY;
     }
 }
@@ -450,6 +644,7 @@ function render() {
     // body.style.height = main.clientHeight + 'px';
     // Function here that checks position of 
     updatePosition();
+    // explorerUpdatePosition();
     updatePointerPosition();
     // updatePointerSize();
     pastLimits();

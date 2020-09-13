@@ -53,7 +53,7 @@ let Your_Name = new Show(
         'Your_Name_5' : 'static/violet2.png',
         'Your_Name_6' : 'static/violet1.png',
         'Your_Name_7' : 'static/violet2.png',
-        'Your_Name_8' : 'static/violet2.png'
+        'Your_Name_8' : 'static/violet2.png',
     }
 );
 

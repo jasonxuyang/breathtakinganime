@@ -28,7 +28,7 @@
                     url('static/font/GoogleSans-Regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
             }
 
-            a,body,button,div,footer,form,h1,h2,h3,header,html,img,input,label,li,nav,p,select,span,table,textarea,ul {
+            a,body,button,div,footer,form,h1,h2,h3,h4,header,html,img,input,label,li,nav,p,select,span,table,textarea,ul {
                 margin: 0;
                 padding: 0;
                 border: 0;
@@ -64,7 +64,7 @@
                 top: 0;
                 left: 0;
                 z-index: 5;
-                transition: opacity .8s ease-in, margin-top .8s ease-in;
+                transition: opacity .8s ease, margin-top .8s ease;
             }
 
             #nav_left h1 {
@@ -81,7 +81,7 @@
                 top: 0;
                 right: 0;
                 z-index: 5;
-                transition: opacity .8s ease-in, margin-top .8s ease-in;
+                transition: opacity .8s ease, margin-top .8s ease;
             }
 
             #nav_right .nav_links {
@@ -91,6 +91,7 @@
                 justify-content: space-between;
                 margin-top: 1.736vw;
                 margin-right: 1.736vw;
+                cursor: none;
             }
 
             #nav_right .nav_link {
@@ -99,6 +100,7 @@
                 color: #FFFFFF;
                 text-shadow: 0px 0px 50px rgba(0, 0, 0, 0.5);
                 text-decoration: none;
+                cursor: none;
             }
 
             main {
@@ -116,7 +118,7 @@
                 left: 0;
                 border-radius: 50%;
                 background: #FFFFFF;
-                z-index: 6;
+                z-index: 10;
                 pointer-events: none;
                 opacity: 0;
                 transition: opacity .3s ease-in;
@@ -130,7 +132,7 @@
                 top: 0;
                 left: 0;
                 border-radius: 50%;
-                z-index: 5;
+                z-index: 9;
                 pointer-events: none;
                 opacity: 0;
                 transition: opacity .3s ease-in;
@@ -212,16 +214,223 @@
             }
 
             h2 {
+                display: block;
                 font-family: 'GoogleSans-Medium';
                 font-size: 2.222vw;
                 color: #FFFFFF;
             }
 
             h3 {
+                display: block;
                 font-family: 'GoogleSans-Medium';
                 font-size: 1.389vw;
                 color: #D9D9D9;
                 margin-bottom: 0.417vw;
+            }
+
+            h4 {
+                display: block;
+                font-family: 'GoogleSans-Regular';
+                font-size: 1.389vw;
+                color: #D9D9D9;
+            }
+
+            p {
+                font-family: 'GoogleSans-Medium';
+                font-size: 1.111vw;
+                color: #ffffff;
+            }
+
+            #animation_explorer_container {
+                position: fixed;
+                width: 100vw;
+                height: 100vh;
+                z-index: 4;
+                background: #000000;
+                position: fixed;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity .5s ease-in;
+            }
+
+            .explorer_img_container {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                z-index: 5;
+            }
+
+            .explorer_img_container ::-webkit-scrollbar {
+                width: 0px;
+                background: transparent;
+            }
+            
+
+            .explorer_img {
+                width: 100vw;
+                height: 100vh;
+                object-fit: cover;
+                object-position: 50% 50%;
+            }
+
+            .explorer_img_overlay_top {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 25vw;
+                background: linear-gradient(180deg, #000000 0%, rgba(0, 0, 0, 0) 100%);
+                opacity: 0.75;
+                pointer-events: none;
+                z-index: 5;
+            }
+
+            .explorer_img_overlay_bottom {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100vw;
+                height: 25vw;
+                background: linear-gradient(360deg, #000000 0%, rgba(0, 0, 0, 0) 100%);
+                opacity: 0.75;
+                pointer-events: none;
+                z-index: 5;
+            }
+
+            #animation_details {
+                position: absolute;
+                top: 6.8056vw;
+                left: 1.736vw;
+                z-index: 6;
+                opacity: 0;
+                margin-top: -.25vw;
+                transition: opacity .8s ease, margin-top .8s ease;
+            }
+
+            .animation_header{
+                color: #FFFFFF;
+            }
+
+            #animation_details h3, h4 {
+                margin-bottom: 1.111vw;
+            }
+
+            #animation_platforms {
+                position: absolute;
+                top: 6.8056vw;
+                right: 1.736vw;
+                z-index: 6;
+                opacity: 0;
+                margin-top: -.25vw;
+                transition: opacity .8s ease, margin-top .8s ease;
+            }
+
+            #animation_platforms h3, h4 {
+                margin-bottom: 1.111vw;
+            }
+
+            #audio_controls {
+                z-index: 8;
+                position: absolute;
+                display: flex;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                justify-content: space-between;
+                align-items: center;
+                width: 96.667vw;
+                left: 1.736vw;
+                bottom: 1.736vw;
+            }
+
+            #audio_controls .left_controls, #audio_controls .right_controls {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                justify-content: space-between;
+                width: 6.528vw;
+            }
+
+            #play_button, #mute_button {
+                width: 1.389vw;
+                height: 1.389vw;
+                opacity: .75;
+                transition: opacity .2s linear;
+            }
+
+            #play_button:hover, #mute_button:hover {
+                opacity: 1;
+                transition: opacity .2s linear;
+            }
+
+            #audio_time, #audio_time_left {
+                width: 2.361vw;
+            }
+
+            #audio_controls .audio_bars {
+                height: .139vw;
+                width: 80.278vw;
+                position: relative;
+            }
+
+            #audio_progress_bar, #audio_load_bar {
+                position: absolute;
+                height: .139vw;
+                width: 80.278vw;
+                left: 0;
+                top: 0;
+                background: #FFFFFF;
+            }
+
+            #audio_load_bar {
+                opacity: .5;
+            }
+
+            #audio_progress_bar {
+                opacity: 1;
+            }
+
+            #carousel_controls .left_controls {
+                z-index: 8;
+                position: absolute;
+                display: flex;
+                flex-direction: column;
+                flex-wrap: nowrap;
+                justify-content: space-between;
+                align-items: center;
+                width: 6.528vw;
+                height: 3.889vw;
+                left: 1.736vw;
+                bottom: 8.056vw;
+            }
+
+            #carousel_controls .right_controls {
+                z-index: 8;
+                position: absolute;
+                display: flex;
+                flex-direction: column;
+                flex-wrap: nowrap;
+                justify-content: space-between;
+                align-items: center;
+                width: 6.528vw;
+                height: 3.889vw;
+                right: 1.736vw;
+                bottom: 8.056vw;
+            }
+
+            #carousel_controls .left {
+                width: 6.528vw;
+                text-align: left;
+            }
+
+            #carousel_controls .right {
+                width: 6.528vw;
+                text-align: right;
+            }
+
+            #carousel_previous_line, #carousel_next_line {
+                width: 6.528vw;
+                height: .139vw;
+                background: #FFFFFF;
             }
 
         </style>
@@ -232,14 +441,68 @@
         </nav>
         <nav id='nav_right'>
             <div class='nav_links'>
-                <a href="" class='nav_link'>Shows</a>
+                <a href="/index" class='nav_link'>Shows</a>
                 <a href="" class='nav_link'>About</a>
             </div>
         </nav>
         <div id='cursor_inner'></div>
         <div id='cursor_outer'></div>
+        <div id='animation_explorer_container'>
+            <div id="animation_details">
+                <h3 class='animation_header'>Animation Details</h3>
+                <h4>Kyoto Animation</h4>
+                <h4>Winter 2018</h4>
+                <h4>13 Episodes</h4>
+                <h4>Finished Airing</h4>
+            </div>
+            <div id='animation_platforms'>
+                <h3 class='animation_header'>Available On</h3>
+                <h4>Netflix</h4>
+            </div>
+
+            <div id='carousel_controls'>
+                <div class='left_controls'>
+                    <p class='right'>Previous</p>
+                    <div id='carousel_previous_line'></div>
+                    <p class='left'>3/8</p>
+                </div>
+                <div class='right_controls'>
+                    <p class='left'>Next</p>
+                    <div id='carousel_next_line'></div>
+                    <p class='right'>5/8</p>
+                </div>
+            </div>
+            
+            <div id='audio_controls'>
+                <div class='left_controls'>
+                    <img src='/static/icon_play.svg' id='play_button'>
+                    <img src='/static/icon_mute.svg' id='mute_button'>
+                    <p id='audio_time'></p>
+                </div>
+                <div class='audio_bars'>
+                    <div id='audio_progress_bar'></div>
+                    <div id='audio_load_bar'></div>
+                </div>
+                <div class='right_controls'>
+                    <p id='audio_time_left'></p>
+                    <img src='/static/icon_previous.svg' id='previous_button'>
+                    <img src='/static/icon_next.svg' id='next_button'>
+                </div>
+            </div>
+            
+            <audio 
+                id='audio_player'
+                src='https://breathtakinganime.s3.us-east-2.amazonaws.com/Track14_APlaceToCallHome.mp3'>
+            </audio>
+            
+            <div class='explorer_img_overlay_top'></div>
+            <div class='explorer_img_container'>
+                <img src='static/violet1.png' class='explorer_img'>
+                <img src='static/violet1.png' class='explorer_img'>
+                <img src='static/violet1.png' class='explorer_img'>
+            </div>
+        </div>
         <main id='main'>
-            <div id='animation_explorer_container'></div>
             <div id='gallery_wrapper'>
                 <div id='gallery'>
                     <!-- <div class='img_container'>

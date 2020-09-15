@@ -3,6 +3,17 @@ import {shows} from './content.js';
 // console.log(shows[0].images);
 // console.log(typeof shows);
 
+window.addEventListener('beforeunload', refresh);
+window.addEventListener('popstate', changeLocation);
+
+function changeLocation() {
+    window.location.href = '/';
+}
+
+function refresh() {
+    window.location.href = 'index.html';
+}
+
 // Init container, body, cursor
 const main = document.getElementById('main');
 const cursorInner = document.getElementById('cursor_inner');
@@ -20,10 +31,13 @@ const animationPlatforms = document.getElementById('animation_platforms');
 const carouselNext = document.getElementById('carousel_next');
 const carouselPrevious = document.getElementById('carousel_previous');
 
+
 // Init audio variables
 var audioPlaying = 0;
+var audioMuted = 0;
 const audioPlayer = document.getElementById('audio_player');
 const audioPlayButton = document.getElementById('play_button');
+const audioMuteButton = document.getElementById('mute_button');
 const audioTimeMarker = document.getElementById('audio_time');
 const audioTimeLeftMarker = document.getElementById('audio_time_left');
 const audioLoadBar = document.getElementById('audio_load_bar');
@@ -50,7 +64,7 @@ outerScaleUpdate = outerScale;
 // Init press and hold variables
 let timerID, counterPct;
 let counter = 0;
-let holdTarget, holdParent, holdURL
+let holdTarget, holdParent, holdChildren, holdOverlay, holdImg, holdShow;
 let pressHoldDuration = 40;
 
 // Init variables to keep track of container position
@@ -78,6 +92,8 @@ function getImgList() {
     })
     shuffleArray(gallery);
 }
+
+console.log(gallery);
 
 // Randomizes img order
 function shuffleArray(array) {
@@ -148,6 +164,9 @@ function createGallery(){
             newImg.classList.add('gallery_img');
             newImg.src = gallery[arrayCounter].imgURL;
             newImg.id = gallery[arrayCounter].imgID;
+            newImg.setAttribute('show-name', gallery[arrayCounter].showName);
+            
+            // Add everything to HTML
             newImgWrapper.appendChild(newImg);
 
             // Iterate counter
@@ -279,15 +298,16 @@ function enterExplorer() {
 
 // Transiioning
 function transition() {
-    let children = holdParent.children;
-    let overlay = children.item(0);
-    let img = children.item(1);
+    holdChildren = holdParent.children;
+    holdOverlay = holdChildren.item(0);
+    holdImg = holdChildren.item(1);
+    holdShow = holdImg.getAttribute('show-name');
 
     // remove overlay
-    overlay.style.opacity = '0';
+    holdOverlay.style.opacity = '0';
 
     // finding persepctive coordinates
-    let imgBounding = img.getBoundingClientRect();
+    let imgBounding = holdImg.getBoundingClientRect();
     let containerBounding = container.getBoundingClientRect();
     let centerPosX = imgBounding.left + (imgBounding.width / 2); // finding x center of img
     let centerPosY = imgBounding.top + (imgBounding.height / 2); // finding y center of img
@@ -316,29 +336,15 @@ function transition() {
     navRight.style.marginTop = '-.25vw'
 }
 
-// console.log(history.state);
-
-let field = document.getElementById("field");
-var htmlContents = document.documentElement.innerHTML;
-localStorage.setItem('myBook', JSON.stringify(htmlContents));
-localStorage.getItem('myBook');
-
-
-// function pushState(show) {
-//     var state = { selectedShow : show},
-//         title = 'Page title',
-//         path = '/' + show;
-    
-//         history.pushState(state, title, path);
-// }
-
-// window.addEventListener('popstate', doSomething);
-
-
-// pushState('home');
-
 function redirect() {
-    // pushState('violet_evergarden');
+    var explorerShow = document.createElement('h1');
+    explorerShow.innerHTML = holdShow;
+    navRight.appendChild(explorerShow);
+    navRight.children[0].style.display = 'none';
+
+    navLeft.children[0].style.display = 'none';
+    navLeft.children[1].style.display = 'block';
+
     container.style.visibility = 'hidden';
     explorer.style.visibility = 'visible';
     explorer.style.opacity = '1';
@@ -359,12 +365,25 @@ function redirect() {
     explorer.addEventListener('mousemove', showAnimationInfo);
     carouselNext.addEventListener('click', explorerMoveNext);
     carouselPrevious.addEventListener('click', explorerMovePrevious);
-    audioPlayButton.addEventListener('click', toggleAudio)
+    audioPlayButton.addEventListener('click', toggleAudio);
+    audioMuteButton.addEventListener('click', toggleMute);
     // audioPlayer.addEventListener('progress', buffering);
     audioPlayer.addEventListener('timeupdate', updateAudioTime);
     
     showAnimationInfo();
     playAudio();
+}
+
+const backButton = document.getElementById('back_button');
+
+backButton.addEventListener('click', goBack);
+
+function goBack() {
+    redirectBack();
+}
+
+function redirectBack() {
+    location.reload();
 }
 
 // console.log(audioPlayer.buffered);
@@ -410,6 +429,14 @@ function toggleAudio() {
     }
 }
 
+function toggleMute() {
+    if (audioMuted == 1) {
+        unmuteAudio();
+    } else if (audioMuted == 0) {
+        muteAudio();
+    }
+}
+
 function playAudio() {
     audioPlayer.play();
     audioPlaying = 1;
@@ -422,13 +449,25 @@ function pauseAudio() {
     audioPlayButton.src='/static/icon_play.svg';
 }
 
+function muteAudio() {
+    audioPlayer.muted = true;
+    audioMuted = 1;
+    audioMuteButton.src='/static/icon_unmute.svg';
+}
+
+function unmuteAudio() {
+    audioPlayer.muted = false;
+    audioMuted = 0;
+    audioMuteButton.src='/static/icon_mute.svg';
+}
+
 function checkEdges(e) {
     var x = e.clientX;
     var y = e.clientY;
-    let w1 = window.innerWidth * .02;
-    let w2 = window.innerWidth * .98;
-    let h1 = window.innerHeight * .98;
-    let h2 = window.innerHeight * .02;
+    let w1 = window.innerWidth * .01;
+    let w2 = window.innerWidth * .99;
+    let h1 = window.innerHeight * .99;
+    let h2 = window.innerHeight * .01;
     if((x>w2 || x<w1) || (y>h1 || y<h2)){
         console.log("We are in the outer area");
         hideAnimationInfo();

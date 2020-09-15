@@ -59,6 +59,34 @@
                 overscroll-behavior: none;
             }
 
+            h2 {
+                display: block;
+                font-family: 'GoogleSans-Medium';
+                font-size: 2.222vw;
+                color: #FFFFFF;
+            }
+
+            h3 {
+                display: block;
+                font-family: 'GoogleSans-Medium';
+                font-size: 1.389vw;
+                color: #D9D9D9;
+                margin-bottom: 0.417vw;
+            }
+
+            h4 {
+                display: block;
+                font-family: 'GoogleSans-Regular';
+                font-size: 1.389vw;
+                color: #D9D9D9;
+            }
+
+            p {
+                font-family: 'GoogleSans-Medium';
+                font-size: 1.111vw;
+                color: #ffffff;
+            }
+
             #nav_left {
                 position: absolute;
                 top: 0;
@@ -69,7 +97,7 @@
 
             #nav_left h1 {
                 font-family: 'GoogleSans-Bold';
-                font-size: 1.389vw;
+                font-size: 1.111vw;
                 color: #FFFFFF;
                 text-shadow: 0px 0px 50px rgba(0, 0, 0, 0.5);
                 margin-top: 1.736vw;
@@ -84,23 +112,52 @@
                 transition: opacity .8s ease, margin-top .8s ease;
             }
 
+            #nav_right h1 {
+                font-family: 'GoogleSans-Bold';
+                font-size: 1.111vw;
+                color: #FFFFFF;
+                text-shadow: 0px 0px 50px rgba(0, 0, 0, 0.5);
+                margin-top: 1.736vw;
+                margin-right: 1.736vw;
+            }
+
             #nav_right .nav_links {
                 display: flex;
                 flex-flow: row nowrap;
-                width: 10.625vw;
                 justify-content: space-between;
                 margin-top: 1.736vw;
-                margin-right: 1.736vw;
                 cursor: none;
             }
 
             #nav_right .nav_link {
                 font-family: 'GoogleSans-Bold';
-                font-size: 1.389vw;
+                font-size: 1.111vw;
                 color: #FFFFFF;
                 text-shadow: 0px 0px 50px rgba(0, 0, 0, 0.5);
                 text-decoration: none;
                 cursor: none;
+                margin-right: 1.736vw;
+            }
+
+            #back_button {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                align-items: center;
+                display: none;
+            }
+
+            #back_button h1 {
+                margin-left: 0;
+                display: inline;
+            }
+
+            #back_button_icon {
+                margin-top: 1.736vw;
+                margin-left: 1.736vw;
+                margin-right: 0.417vw;
+                width: 1.019vw;
+                height: 0.833vw;
             }
 
             main {
@@ -214,34 +271,6 @@
                 transform: translate(-50%, -50%);
             }
 
-            h2 {
-                display: block;
-                font-family: 'GoogleSans-Medium';
-                font-size: 2.222vw;
-                color: #FFFFFF;
-            }
-
-            h3 {
-                display: block;
-                font-family: 'GoogleSans-Medium';
-                font-size: 1.389vw;
-                color: #D9D9D9;
-                margin-bottom: 0.417vw;
-            }
-
-            h4 {
-                display: block;
-                font-family: 'GoogleSans-Regular';
-                font-size: 1.389vw;
-                color: #D9D9D9;
-            }
-
-            p {
-                font-family: 'GoogleSans-Medium';
-                font-size: 1.111vw;
-                color: #ffffff;
-            }
-
             #animation_explorer_container {
                 position: fixed;
                 width: 100vw;
@@ -282,7 +311,7 @@
                 width: 100vw;
                 height: 25vw;
                 background: linear-gradient(180deg, #000000 0%, rgba(0, 0, 0, 0) 100%);
-                opacity: 0.75;
+                opacity: .75;
                 pointer-events: none;
                 z-index: 5;
             }
@@ -294,14 +323,14 @@
                 width: 100vw;
                 height: 25vw;
                 background: linear-gradient(360deg, #000000 0%, rgba(0, 0, 0, 0) 100%);
-                opacity: 0.75;
+                opacity: .75;
                 pointer-events: none;
                 z-index: 5;
             }
 
             #animation_details {
                 position: absolute;
-                top: 6.8056vw;
+                top: 5.208vw;
                 left: 1.736vw;
                 z-index: 6;
                 opacity: 0;
@@ -319,7 +348,7 @@
 
             #animation_platforms {
                 position: absolute;
-                top: 6.8056vw;
+                top: 5.208vw;
                 right: 1.736vw;
                 z-index: 6;
                 opacity: 0;
@@ -402,7 +431,7 @@
                 width: 6.528vw;
                 height: 3.889vw;
                 left: 1.736vw;
-                bottom: 8.056vw;
+                bottom: 5.417vw;
             }
 
             #carousel_controls .right_controls {
@@ -416,7 +445,7 @@
                 width: 6.528vw;
                 height: 3.889vw;
                 right: 1.736vw;
-                bottom: 8.056vw;
+                bottom: 5.417vw;
             }
 
             #carousel_controls .left {
@@ -431,15 +460,18 @@
 
             #carousel_previous_line, #carousel_next_line {
                 width: 6.528vw;
-                height: .139vw;
+                height: 1.5px;
                 background: #FFFFFF;
             }
-
         </style>
     </head>
     <body>
         <nav id='nav_left'>
             <h1>BreathTakingAnime</h1>
+            <div id='back_button'>
+                <img src='/static/icon_arrow.svg' id='back_button_icon'>
+                <h1>Back to Home</h1>
+            </div>
         </nav>
         <nav id='nav_right'>
             <div class='nav_links'>
@@ -494,10 +526,11 @@
             
             <audio 
                 id='audio_player'
-                src='https://breathtakinganime.s3.us-east-2.amazonaws.com/Track14_APlaceToCallHome.mp3'>
+                src=''>
             </audio>
             
             <div class='explorer_img_overlay_top'></div>
+            <div class='explorer_img_overlay_bottom'></div>
             <div id='explorer_img_container'>
                 <img src='static/violet1.png' class='explorer_img'>
                 <img src='static/violet1.png' class='explorer_img'>

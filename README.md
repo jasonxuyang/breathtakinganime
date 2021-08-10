@@ -2,7 +2,7 @@
 ![breathtakinganime_landing page](https://user-images.githubusercontent.com/31247197/128810037-181adec4-409d-439b-8cbd-7002b9236815.png)
 
 View the current build [here](https://breathtakinganime-xyz.vercel.app/).
-An interactive image gallery of background art from Japanese animation.  Built with vanilla JS.
+Breathtakinganime is an interactive image gallery of background art from Japanese animation. Built with vanilla JS.
 
 ### Running the project
 Clone the repo into a directory of your choice, and open the index.html file in an internet browser.

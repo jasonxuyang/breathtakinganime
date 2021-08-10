@@ -1,4 +1,4 @@
-## breathtakinganime.xyz
+# breathtakinganime.xyz
 An interactive image gallery of background art from Japanese animation.  Built with vanilla JS.
 
 ## Running the project

@@ -1,4 +1,7 @@
-# breathtakinganime.xyz
+# breathtakinganime.xyz!
+[breathtakinganime_landing](https://user-images.githubusercontent.com/31247197/128809982-5e5635c6-2864-4c68-91f3-ccc44c279578.png)
+
+View the current build [here](https://breathtakinganime-xyz.vercel.app/).
 An interactive image gallery of background art from Japanese animation.  Built with vanilla JS.
 
 ### Running the project

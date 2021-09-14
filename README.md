@@ -1,4 +1,4 @@
-# breathtakinganime.xyz
+# breathtakinganime
 ![breathtakinganime_landing page](https://user-images.githubusercontent.com/31247197/128810037-181adec4-409d-439b-8cbd-7002b9236815.png)
 
 View the current build [here](https://breathtakinganime-xyz.vercel.app/).
